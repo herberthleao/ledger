@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.12.xsd
+                        http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.12.xsd">
+    <changeSet id="createEntriesTable" author="leao">
+        <sql>
+            DROP TYPE IF EXISTS operations;
+            CREATE TYPE operations AS ENUM ('CREDIT', 'DEBIT');
+        </sql>
+        <createTable tableName="entries">
+            <column name="id" type="uuid">
+                <constraints nullable="false" primaryKey="true" unique="true" />
+            </column>
+            <column name="operation" type="operations">
+                <constraints nullable="false" />
+            </column>
+            <column name="account_id" type="uuid">
+                <constraints nullable="false" />
+            </column>
+            <column name="amount" type="decimal(18,8)">
+                <constraints nullable="false" />
+            </column>
+            <column name="previous_balance" type="decimal(18,8)">
+                <constraints nullable="false" />
+            </column>
+            <column name="after_balance" type="decimal(18,8)">
+                <constraints nullable="false" />
+            </column>
+            <column name="description" type="text(1000)" />
+            <column name="observation" type="text(1000)" />
+            <column name="user_id" type="uuid">
+                <constraints nullable="false" />
+            </column>
+            <column name="status" type="statuses" defaultValue="ACTIVE">
+                <constraints nullable="false" />
+            </column>
+            <column name="created_at" type="timestamp">
+                <constraints nullable="false" />
+            </column>
+            <column name="updated_at" type="timestamp">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+        <addForeignKeyConstraint
+            baseTableName="entries"
+            baseColumnNames="account_id"
+            constraintName="fk_entries_accounts"
+            referencedTableName="accounts"
+            referencedColumnNames="id"
+            onUpdate="CASCADE"
+            onDelete="RESTRICT"
+        />
+        <addForeignKeyConstraint
+            baseTableName="entries"
+            baseColumnNames="user_id"
+            constraintName="fk_entries_users"
+            referencedTableName="users"
+            referencedColumnNames="id"
+            onUpdate="CASCADE"
+            onDelete="RESTRICT"
+        />
+    </changeSet>
+</databaseChangeLog>

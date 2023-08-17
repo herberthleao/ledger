@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.12.xsd
+                        http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.12.xsd">
+    <changeSet id="createAccountsTable" author="leao">
+        <createTable tableName="accounts">
+            <column name="id" type="uuid">
+                <constraints nullable="false" primaryKey="true" unique="true" />
+            </column>
+            <column name="name" type="character varying(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="description" type="character varying(255)" />
+            <column name="user_id" type="uuid">
+                <constraints nullable="false" />
+            </column>
+            <column name="institution_id" type="uuid">
+                <constraints nullable="false" />
+            </column>
+            <column name="type_id" type="uuid">
+                <constraints nullable="false" />
+            </column>
+            <column name="balance" type="decimal(18,8)" defaultValue="0">
+                <constraints nullable="false" />
+            </column>
+            <column name="status" type="statuses" defaultValue="ACTIVE">
+                <constraints nullable="false" />
+            </column>
+            <column name="created_at" type="timestamp">
+                <constraints nullable="false" />
+            </column>
+            <column name="updated_at" type="timestamp">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+        <addForeignKeyConstraint
+            baseTableName="accounts"
+            baseColumnNames="user_id"
+            constraintName="fk_accounts_users"
+            referencedTableName="users"
+            referencedColumnNames="id"
+            onUpdate="CASCADE"
+            onDelete="RESTRICT"
+        />
+        <addForeignKeyConstraint
+            baseTableName="accounts"
+            baseColumnNames="institution_id"
+            constraintName="fk_accounts_institutions"
+            referencedTableName="institutions"
+            referencedColumnNames="id"
+            onUpdate="CASCADE"
+            onDelete="RESTRICT"
+        />
+        <addForeignKeyConstraint
+            baseTableName="accounts"
+            baseColumnNames="type_id"
+            constraintName="fk_accounts_account_types"
+            referencedTableName="account_types"
+            referencedColumnNames="id"
+            onUpdate="CASCADE"
+            onDelete="RESTRICT"
+        />
+    </changeSet>
+</databaseChangeLog>
